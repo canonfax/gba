@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Időpontfoglalás – GyulaBringa</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/foglalas.css">
+</head>
+<body data-page="foglalas">
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <div class="nav-logo-imgs">
+          <img src="/images/logo.png" alt="GyulaBringa">
+          <img src="/images/ssc_logo.png" alt="Shimano Service Center">
+        </div>
+        <div class="nav-logo-divider"></div>
+        <div class="nav-logo-text"><h1>GyulaBringa</h1><span>Shimano Service Center</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/"                    data-page="fooldal">Főoldal</a></li>
+        <li><a href="/pages/rolunk.html"   data-page="rolunk">Rólunk</a></li>
+        <li><a href="/pages/services.html" data-page="services">Szolgáltatások</a></li>
+        <li><a href="/pages/gallery.html"  data-page="gallery">Galéria</a></li>
+        <li><a href="/pages/foglalas.html" data-page="foglalas" class="nav-cta">Időpontfoglalás</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/">🏠 Főoldal</a>
+    <a href="/pages/rolunk.html">👥 Rólunk</a>
+    <a href="/pages/services.html">🔧 Szolgáltatások</a>
+    <a href="/pages/gallery.html">📷 Galéria</a>
+    <a href="/pages/foglalas.html">📅 Időpontfoglalás</a>
+    <a href="/pages/contact.html">✉️ Kapcsolat</a>
+  </div>
+
+  <div class="page">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="section-label">Időpontfoglalás</div>
+        <h1>Foglalj időpontot<br>online!</h1>
+        <p>Gyorsan, egyszerűen — válassz szabad időpontot és mi elvégezzük a többit.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-inner">
+        <div class="foglalas-wrap" id="foglalas-form-wrap">
+
+          <!-- LÉPÉSJELZŐ -->
+          <div class="steps">
+            <div class="step active" id="s1"><div class="step-n">1</div><div class="step-l">Szolgáltatás</div></div>
+            <div class="step-line" id="sl1"></div>
+            <div class="step" id="s2"><div class="step-n">2</div><div class="step-l">Időpont</div></div>
+            <div class="step-line" id="sl2"></div>
+            <div class="step" id="s3"><div class="step-n">3</div><div class="step-l">Adatok</div></div>
+          </div>
+
+          <!-- 1. LÉPÉS: SZOLGÁLTATÁS -->
+          <div id="step-1" class="booking-step">
+            <h2 class="section-title" style="margin-bottom:1.5rem;">Milyen szervízt kérsz?</h2>
+
+            <div class="service-opts" id="service-opts">
+              <button class="service-opt" data-service="Általános karbantartás">
+                <span class="service-opt-ico">⚙️</span>
+                <div class="service-opt-title">Általános karbantartás</div>
+                <div class="service-opt-desc">Fékek, váltó, kenés, kerekek ellenőrzése</div>
+              </button>
+              <button class="service-opt" data-service="Shimano váltórendszer beállítás">
+                <span class="service-opt-ico">🔧</span>
+                <div class="service-opt-title">Shimano váltórendszer</div>
+                <div class="service-opt-desc">Váltó beállítás, bowdencsere, Di2</div>
+              </button>
+              <button class="service-opt" data-service="Fékrendszer szerviz">
+                <span class="service-opt-ico">🛑</span>
+                <div class="service-opt-title">Fékrendszer szerviz</div>
+                <div class="service-opt-desc">V-fék, tárcsafék, hidraulikus légtelenítés</div>
+              </button>
+              <button class="service-opt" data-service="Bosch E-bike diagnosztika">
+                <span class="service-opt-ico">⚡</span>
+                <div class="service-opt-title">Bosch E-bike szerviz</div>
+                <div class="service-opt-desc">Diagnosztika, szoftverfrissítés, rendszerjavítás</div>
+              </button>
+              <button class="service-opt" data-service="Kerék szerviz">
+                <span class="service-opt-ico">🛞</span>
+                <div class="service-opt-title">Kerék szerviz</div>
+                <div class="service-opt-desc">Defekt, centírozás, kerékfűzés</div>
+              </button>
+              <button class="service-opt" data-service="Egyéb (leírás a megjegyzésben)">
+                <span class="service-opt-ico">💬</span>
+                <div class="service-opt-title">Egyéb</div>
+                <div class="service-opt-desc">Megjegyzésben leírom a problémát</div>
+              </button>
+            </div>
+
+            <div style="margin-top:1.5rem;">
+              <div class="section-label" style="margin-bottom:.75rem;">Kerékpár típusa</div>
+              <div class="bike-opts">
+                <button class="bike-opt" data-bike="Városi">🚲 Városi</button>
+                <button class="bike-opt" data-bike="MTB">🏔️ MTB</button>
+                <button class="bike-opt" data-bike="Országúti">🚴 Országúti</button>
+                <button class="bike-opt" data-bike="E-bike">⚡ E-bike</button>
+                <button class="bike-opt" data-bike="Gravel">🪨 Gravel</button>
+                <button class="bike-opt" data-bike="Egyéb">🔧 Egyéb</button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;margin-top:2rem;" id="step1-next">Tovább →</button>
+          </div>
+
+          <!-- 2. LÉPÉS: IDŐPONT -->
+          <div id="step-2" class="booking-step" style="display:none;">
+            <h2 class="section-title" style="margin-bottom:1.5rem;">Válassz időpontot!</h2>
+
+            <div class="section-label" style="margin-bottom:.75rem;">Dátum</div>
+            <div class="naptar-row" id="naptar-row"></div>
+
+            <div class="section-label" style="margin-bottom:.75rem;">Szabad időpontok</div>
+            <div id="slot-info" style="color:var(--ink-dim);font-size:.88rem;margin-bottom:1rem;">Válassz előbb dátumot!</div>
+            <div class="slot-grid" id="slot-grid"></div>
+
+            <div style="display:flex;gap:.75rem;margin-top:2rem;">
+              <button class="btn btn-outline" style="flex:1;" id="step2-back">← Vissza</button>
+              <button class="btn btn-primary" style="flex:2;" id="step2-next">Tovább →</button>
+            </div>
+          </div>
+
+          <!-- 3. LÉPÉS: ADATOK -->
+          <div id="step-3" class="booking-step" style="display:none;">
+            <h2 class="section-title" style="margin-bottom:1.5rem;">Elérhetőségeid</h2>
+
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label class="form-label">Neved *</label>
+              <input type="text" class="form-input" id="b-nev" placeholder="Kovács János" required>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label class="form-label">Telefonszám *</label>
+              <input type="tel" class="form-input" id="b-tel" placeholder="+36 30 123 4567" required>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label class="form-label">Email (visszaigazoláshoz)</label>
+              <input type="email" class="form-input" id="b-email" placeholder="pelda@email.hu">
+            </div>
+            <div class="form-group" style="margin-bottom:1rem;">
+              <label class="form-label">Megjegyzés</label>
+              <textarea class="form-input" id="b-megj" rows="3" placeholder="Kerékpár típusa, egyéb megjegyzés..."></textarea>
+            </div>
+
+            <!-- Összefoglaló -->
+            <div class="info-box" style="margin-bottom:1.5rem;">
+              <div class="info-box-ico">📋</div>
+              <div>
+                <div class="info-box-title">Foglalás összefoglalója</div>
+                <div id="foglalas-osszegzas" class="info-box-val"></div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:.75rem;">
+              <button class="btn btn-outline" style="flex:1;" id="step3-back">← Vissza</button>
+              <button class="btn btn-primary" style="flex:2;" id="step3-submit">📅 Foglalás küldése</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- VISSZAIGAZOLÁS -->
+        <div id="booking-success" class="foglalas-wrap booking-success" style="display:none;">
+          <div class="booking-success-ico">✅</div>
+          <h2>Foglalásod megérkezett!</h2>
+          <p>Hamarosan visszaigazoljuk telefonon vagy emailben.</p>
+          <p><strong>Fontos:</strong> A visszaigazolásig az időpont nem végleges.</p>
+          <a href="/" class="btn btn-primary" style="margin-top:1.5rem;">← Vissza a főoldalra</a>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">Gyula<span>Bringa</span></div>
+        <div class="footer-logo-sub">Shimano Service Center</div>
+      </div>
+      <div>
+        <div class="footer-title">Elérhetőség</div>
+        <div class="footer-contact-item"><span class="footer-contact-ico">📍</span><span>5700 Gyula, Nagyváradi út 23.</span></div>
+        <div class="footer-contact-item"><span class="footer-contact-ico">📞</span><a href="tel:+3666611379">+36 66/611-379</a></div>
+      </div>
+      <div>
+        <div class="footer-title">Nyitvatartás</div>
+        <ul class="footer-list">
+          <li>Hétfő – Péntek: 8:00 – 17:00</li>
+          <li>Szombat: 8:00 – 12:00</li>
+          <li style="color:rgba(255,255,255,.4);">Vasárnap: Zárva</li>
+        </ul>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom"><span>© 2026 GyulaBringa</span></div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/foglalas.js"></script>
+</body>
+</html>

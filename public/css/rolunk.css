@@ -1,0 +1,57 @@
+/* rolunk.css */
+
+.about-main-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+}
+.about-img-stack { position: relative; }
+.about-img-1 {
+  width: 100%; border-radius: var(--r2); box-shadow: var(--shadow-xl);
+  aspect-ratio: 4/3; object-fit: cover;
+}
+.about-img-2 {
+  position: absolute; bottom: -1.5rem; right: -1.5rem;
+  width: 55%; border-radius: var(--r2); box-shadow: var(--shadow-xl);
+  border: 4px solid var(--white); aspect-ratio: 4/3; object-fit: cover;
+}
+.about-p { font-size: .98rem; color: var(--ink-dim); line-height: 1.8; margin-bottom: 1rem; }
+.about-p strong { color: var(--ink); }
+
+.values-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem;
+}
+.value-card {
+  background: var(--white); border: 1px solid var(--gray);
+  border-radius: var(--r2); padding: 2rem 1.5rem;
+  text-align: center; box-shadow: var(--shadow-sm);
+  transition: all .3s ease;
+}
+.value-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--shimano); }
+.value-ico   { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+.value-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--ink); text-transform: uppercase; margin-bottom: .6rem; }
+.value-desc  { font-size: .85rem; color: var(--ink-dim); line-height: 1.65; }
+
+.certs-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+}
+.certs-badges { display: flex; flex-direction: column; gap: 1rem; }
+.cert-badge {
+  display: flex; align-items: center; gap: 1.25rem;
+  background: var(--off); border: 1px solid var(--gray);
+  border-radius: var(--r2); padding: 1.25rem 1.5rem;
+  transition: all .3s ease;
+}
+.cert-badge:hover { border-color: var(--shimano); background: var(--shimano-p); }
+.cert-badge img   { height: 48px; width: auto; object-fit: contain; flex-shrink: 0; }
+.cert-badge-ico   { font-size: 2.5rem; flex-shrink: 0; }
+.cert-badge-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--ink); text-transform: uppercase; }
+.cert-badge-sub   { font-size: .78rem; color: var(--ink-dim); margin-top: .2rem; }
+
+@media (max-width: 960px) {
+  .about-main-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .about-img-2 { display: none; }
+  .values-grid { grid-template-columns: 1fr 1fr; }
+  .certs-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+@media (max-width: 600px) {
+  .values-grid { grid-template-columns: 1fr 1fr; }
+}

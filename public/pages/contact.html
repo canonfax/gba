@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kapcsolat – GyulaBringa</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/contact.css">
+</head>
+<body data-page="contact">
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <div class="nav-logo-imgs"><img src="/images/logo.png" alt=""><img src="/images/ssc_logo.png" alt=""></div>
+        <div class="nav-logo-divider"></div>
+        <div class="nav-logo-text"><h1>GyulaBringa</h1><span>Shimano Service Center</span></div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/" data-page="fooldal">Főoldal</a></li>
+        <li><a href="/pages/rolunk.html"   data-page="rolunk">Rólunk</a></li>
+        <li><a href="/pages/services.html" data-page="services">Szolgáltatások</a></li>
+        <li><a href="/pages/gallery.html"  data-page="gallery">Galéria</a></li>
+        <li><a href="/pages/contact.html"  data-page="contact" class="nav-cta">Kapcsolat</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="/">🏠 Főoldal</a><a href="/pages/rolunk.html">👥 Rólunk</a>
+    <a href="/pages/services.html">🔧 Szolgáltatások</a><a href="/pages/gallery.html">📷 Galéria</a>
+    <a href="/pages/foglalas.html">📅 Időpontfoglalás</a><a href="/pages/contact.html">✉️ Kapcsolat</a>
+  </div>
+
+  <div class="page">
+    <div class="page-hero">
+      <div class="page-hero-inner">
+        <div class="section-label">Kapcsolat</div>
+        <h1>Lépj velünk<br>kapcsolatba!</h1>
+        <p>Kérdésed van? Írj vagy hívj — hamarosan válaszolunk.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-inner">
+        <div class="contact-grid">
+
+          <!-- Adatok -->
+          <div class="contact-info fade-in">
+            <div class="section-label">Elérhetőségek</div>
+            <h2 class="section-title" style="margin-bottom:2rem;">Megtalálsz minket.</h2>
+
+            <div class="contact-card">
+              <div class="contact-card-ico">📍</div>
+              <div>
+                <div class="contact-card-title">Cím</div>
+                <div class="contact-card-val">5700 Gyula, Nagyváradi út 23.</div>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-ico">📞</div>
+              <div>
+                <div class="contact-card-title">Telefonszám</div>
+                <div class="contact-card-val">
+                  <a href="tel:+3666611379">+36 66/611-379</a><br>
+                  <a href="tel:+36305484260">+36 30/5484-260</a>
+                </div>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-ico">✉️</div>
+              <div>
+                <div class="contact-card-title">Email</div>
+                <div class="contact-card-val"><a href="mailto:gyulabringa@gmail.com">gyulabringa@gmail.com</a></div>
+              </div>
+            </div>
+            <div class="contact-card">
+              <div class="contact-card-ico">🕐</div>
+              <div>
+                <div class="contact-card-title">Nyitvatartás</div>
+                <div class="contact-card-val">
+                  Hétfő – Péntek: 8:00 – 17:00<br>
+                  Szombat: 8:00 – 12:00<br>
+                  <span style="color:var(--ink-dim);">Vasárnap: Zárva</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Térkép -->
+            <div class="contact-map">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2726.5!2d21.2826!3d46.6467!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x474528a6f0a7c8a7%3A0x1!2sNagyváradi+út+23%2C+Gyula%2C+5700!5e0!3m2!1shu!2shu!4v1234567890"
+                width="100%" height="220" style="border:0;border-radius:var(--r2);" allowfullscreen="" loading="lazy">
+              </iframe>
+            </div>
+          </div>
+
+          <!-- Üzenetküldő -->
+          <div class="fade-in delay-2">
+            <div class="section-label">Üzenet</div>
+            <h2 class="section-title" style="margin-bottom:2rem;">Írj nekünk!</h2>
+            <form id="contact-form" class="contact-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Neved *</label>
+                  <input type="text" class="form-input" id="cf-nev" placeholder="Kovács János" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email *</label>
+                  <input type="email" class="form-input" id="cf-email" placeholder="pelda@email.hu" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tárgy</label>
+                <select class="form-input" id="cf-targy">
+                  <option>Szerviz megkeresés</option>
+                  <option>Időpontfoglalás</option>
+                  <option>Alkatrész érdeklődés</option>
+                  <option>Egyéb kérdés</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Üzenet *</label>
+                <textarea class="form-input" id="cf-uzenet" rows="5" placeholder="Írd ide a kérdésedet..." required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;">📨 Üzenet küldése</button>
+              <div class="form-success" id="form-success">✅ Köszönjük! Hamarosan felvesszük veled a kapcsolatot.</div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div><div class="footer-logo">Gyula<span>Bringa</span></div><div class="footer-logo-sub">Shimano Service Center</div><p class="footer-desc">Officíális Shimano Service Center és Bosch E-bike szervizpartner Gyulán.</p></div>
+      <div><div class="footer-title">Elérhetőség</div>
+        <div class="footer-contact-item"><span class="footer-contact-ico">📍</span><span>5700 Gyula, Nagyváradi út 23.</span></div>
+        <div class="footer-contact-item"><span class="footer-contact-ico">📞</span><div><a href="tel:+3666611379">+36 66/611-379</a><br><a href="tel:+36305484260">+36 30/5484-260</a></div></div>
+        <div class="footer-contact-item"><span class="footer-contact-ico">✉️</span><a href="mailto:gyulabringa@gmail.com">gyulabringa@gmail.com</a></div>
+      </div>
+      <div><div class="footer-title">Nyitvatartás</div>
+        <ul class="footer-list"><li>Hétfő – Péntek: 8:00 – 17:00</li><li>Szombat: 8:00 – 12:00</li><li style="color:rgba(255,255,255,.4);">Vasárnap: Zárva</li></ul>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom"><span>© 2026 GyulaBringa</span><div class="footer-bottom-links"><a href="/pages/impresszum.html">Impresszum</a><a href="/pages/adatkezeles.html">Adatkezelés</a><a href="/pages/aszf.html">ÁSZF</a></div></div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const nev    = document.getElementById('cf-nev').value.trim();
+      const email  = document.getElementById('cf-email').value.trim();
+      const targy  = document.getElementById('cf-targy').value;
+      const uzenet = document.getElementById('cf-uzenet').value.trim();
+      if (!nev || !email || !uzenet) return;
+      const sub  = encodeURIComponent(`GyulaBringa weboldal – ${targy}`);
+      const body = encodeURIComponent(`Feladó: ${nev}\nEmail: ${email}\nTárgy: ${targy}\n\n${uzenet}`);
+      window.location.href = `mailto:gyulabringa@gmail.com?subject=${sub}&body=${body}`;
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>

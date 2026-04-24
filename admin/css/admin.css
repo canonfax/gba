@@ -1,0 +1,292 @@
+/* ═══════════════════════════════════════════
+   GyulaBringa Admin Panel · admin.css
+   ═══════════════════════════════════════════ */
+
+:root {
+  --shimano:   #009AD9;
+  --shimano-d: #0077aa;
+  --shimano-p: #e6f6fd;
+  --ink:       #0d1520;
+  --bg:        #0f1923;
+  --bg2:       #162030;
+  --bg3:       #1d2d3f;
+  --border:    rgba(0,154,217,.2);
+  --text:      #e0eaf4;
+  --text-dim:  #6a8aaa;
+  --green:     #10b981;
+  --orange:    #f59e0b;
+  --red:       #ef4444;
+  --purple:    #8b5cf6;
+  --font:      'Segoe UI', system-ui, sans-serif;
+  --r:  6px;
+  --r2: 12px;
+  --t:  .18s ease;
+  --sidebar-w: 240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; overflow-x: hidden; }
+input, select, textarea, button { font-family: var(--font); }
+a { color: var(--shimano); text-decoration: none; }
+
+/* ── LOGIN ── */
+.login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); padding: 1.5rem;
+}
+.login-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r2); padding: 2.5rem;
+  width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+.login-logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.login-logo-img { height: 48px; width: auto; filter: brightness(0) invert(1); }
+.login-logo-title { font-size: 1.1rem; font-weight: 800; color: var(--shimano); }
+.login-logo-sub   { font-size: .72rem; color: var(--text-dim); }
+.login-err { color: var(--red); font-size: .82rem; min-height: 1rem; margin-bottom: .75rem; }
+
+/* ── ADMIN LAYOUT ── */
+.admin-wrap { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+  transition: transform .3s ease;
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: .75rem;
+  padding: 1.25rem 1rem; border-bottom: 1px solid var(--border);
+}
+.sidebar-logo img { height: 36px; filter: brightness(0) invert(1); }
+.sidebar-title { font-size: .9rem; font-weight: 800; color: var(--shimano); }
+.sidebar-sub   { font-size: .65rem; color: var(--text-dim); }
+
+.sidebar-nav { flex: 1; padding: 1rem .75rem; display: flex; flex-direction: column; gap: .25rem; overflow-y: auto; }
+
+.nav-item {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .65rem .85rem; border-radius: var(--r);
+  font-size: .85rem; font-weight: 600; color: var(--text-dim);
+  background: none; border: none; cursor: pointer; text-align: left;
+  transition: all var(--t); width: 100%; position: relative;
+}
+.nav-item:hover  { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: rgba(0,154,217,.15); color: var(--shimano); }
+.nav-ico { font-size: 1rem; width: 20px; text-align: center; flex-shrink: 0; }
+
+.nav-badge {
+  margin-left: auto; background: var(--red); color: #fff;
+  border-radius: 50px; padding: .1rem .45rem; font-size: .68rem; font-weight: 800;
+  min-width: 18px; text-align: center;
+}
+.nav-badge:empty { display: none; }
+
+.sidebar-footer { padding: 1rem; border-top: 1px solid var(--border); }
+.sidebar-user  { font-size: .78rem; color: var(--text-dim); margin-bottom: .75rem; }
+.btn-logout    { width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text-dim); border-radius: var(--r); padding: .45rem; cursor: pointer; font-size: .78rem; transition: all var(--t); margin-bottom: .5rem; }
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
+.btn-weboldal  { display: block; text-align: center; font-size: .78rem; color: var(--shimano); padding: .45rem; border-radius: var(--r); background: rgba(0,154,217,.1); transition: all var(--t); }
+.btn-weboldal:hover { background: rgba(0,154,217,.2); }
+
+/* ── FŐ TARTALOM ── */
+.main-content {
+  flex: 1; margin-left: var(--sidebar-w);
+  padding: 2rem; overflow-y: auto; min-height: 100vh;
+}
+.hamburger-admin {
+  display: none; position: fixed; top: 1rem; right: 1rem; z-index: 200;
+  background: var(--shimano); border: none; color: #fff; width: 42px; height: 42px;
+  border-radius: var(--r); font-size: 1.2rem; cursor: pointer;
+}
+
+/* ── TABEK ── */
+.tab { display: none; }
+.tab.active { display: block; }
+.tab-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;
+}
+.tab-header h1 { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+.tab-header-sub { font-size: .82rem; color: var(--text-dim); }
+
+/* ── GOMBOK ── */
+.btn {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .5rem 1rem; border-radius: 50px; border: none;
+  font-size: .82rem; font-weight: 700; cursor: pointer; transition: all var(--t);
+}
+.btn-primary  { background: var(--shimano); color: #fff; }
+.btn-primary:hover { background: var(--shimano-d); }
+.btn-success  { background: var(--green); color: #fff; }
+.btn-success:hover { opacity: .85; }
+.btn-danger   { background: transparent; border: 1px solid rgba(239,68,68,.4); color: var(--red); }
+.btn-danger:hover { background: rgba(239,68,68,.1); }
+.btn-ghost    { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+.btn-ghost:hover { border-color: var(--shimano); color: var(--shimano); }
+.btn-orange   { background: var(--orange); color: #fff; }
+.btn-sm { padding: .3rem .7rem; font-size: .75rem; }
+
+/* ── STAT KÁRTYÁK ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2);
+  padding: 1.25rem 1.5rem;
+}
+.stat-card.loading { color: var(--text-dim); font-size: .85rem; }
+.stat-card-n { font-size: 2rem; font-weight: 900; color: var(--shimano); line-height: 1; }
+.stat-card-l { font-size: .72rem; color: var(--text-dim); margin-top: .3rem; text-transform: uppercase; letter-spacing: .06em; }
+.stat-card-ico { font-size: 1.5rem; margin-bottom: .5rem; display: block; }
+.stat-green  { border-color: rgba(16,185,129,.3); }
+.stat-green .stat-card-n { color: var(--green); }
+.stat-orange { border-color: rgba(245,158,11,.3); }
+.stat-orange .stat-card-n { color: var(--orange); }
+.stat-red    { border-color: rgba(239,68,68,.3); }
+.stat-red .stat-card-n { color: var(--red); }
+
+/* ── DASHBOARD GRID ── */
+.dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.dashboard-section { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.25rem; }
+.section-title { font-size: .82rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; }
+
+/* ── LISTA ELEMEK ── */
+.list-wrap { display: flex; flex-direction: column; gap: .65rem; }
+.list-item {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2);
+  padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem;
+  transition: border-color var(--t);
+}
+.list-item:hover { border-color: var(--shimano); }
+.list-item-info { flex: 1; min-width: 0; }
+.list-item-title { font-weight: 700; font-size: .92rem; color: var(--text); margin-bottom: .25rem; }
+.list-item-meta  { font-size: .75rem; color: var(--text-dim); display: flex; gap: .75rem; flex-wrap: wrap; }
+.list-item-actions { display: flex; gap: .5rem; flex-shrink: 0; flex-wrap: wrap; }
+
+.empty-state { text-align: center; padding: 3rem; color: var(--text-dim); font-size: .88rem; }
+
+/* ── ÁLLAPOT BADGE ── */
+.badge {
+  display: inline-flex; align-items: center; gap: .25rem;
+  font-size: .68rem; font-weight: 800; padding: .2rem .6rem; border-radius: 50px;
+  text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+}
+.badge-fuggeben    { background: rgba(245,158,11,.15); color: var(--orange); }
+.badge-jovahagyva  { background: rgba(16,185,129,.15);  color: var(--green); }
+.badge-elutasitva  { background: rgba(239,68,68,.15);   color: var(--red); }
+.badge-munkalap    { background: rgba(0,154,217,.15);   color: var(--shimano); }
+.badge-nyitott     { background: rgba(245,158,11,.15);  color: var(--orange); }
+.badge-folyamatban { background: rgba(0,154,217,.15);   color: var(--shimano); }
+.badge-kesz        { background: rgba(16,185,129,.15);  color: var(--green); }
+.badge-archiv      { background: rgba(100,116,139,.15); color: #64748b; }
+.badge-surgos      { background: rgba(239,68,68,.15);   color: var(--red); }
+.badge-magas       { background: rgba(245,158,11,.15);  color: var(--orange); }
+.badge-normal      { background: rgba(0,154,217,.15);   color: var(--shimano); }
+.badge-alacsony    { background: rgba(16,185,129,.15);  color: var(--green); }
+
+/* ── SZŰRŐK ── */
+.tab-filters { display: flex; gap: .4rem; flex-wrap: wrap; }
+.filter-btn {
+  padding: .35rem .85rem; border-radius: 50px; border: 1px solid var(--border);
+  background: transparent; font-size: .78rem; font-weight: 600;
+  color: var(--text-dim); cursor: pointer; transition: all var(--t);
+}
+.filter-btn:hover  { border-color: var(--shimano); color: var(--shimano); }
+.filter-btn.active { background: var(--shimano); border-color: var(--shimano); color: #fff; }
+
+/* ── FORM ── */
+.form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 2rem; max-width: 800px; }
+.form-section-title { font-size: .78rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: .1em; margin: 1.5rem 0 1rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+.form-section-title:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: .4rem; }
+.form-group label { font-size: .72rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--r); padding: .65rem .9rem;
+  color: var(--text); font-size: .88rem; width: 100%;
+  transition: border-color var(--t);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { outline: none; border-color: var(--shimano); }
+.form-group textarea { resize: vertical; }
+.form-group select { appearance: none; cursor: pointer; }
+
+/* ── RÉSZLETES MUNKALAP ── */
+.detail-panel { }
+.detail-header {
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;
+}
+.btn-back { background: none; border: none; color: var(--shimano); font-size: .88rem; font-weight: 700; cursor: pointer; padding: 0; }
+.detail-header h2 { font-size: 1.2rem; font-weight: 800; flex: 1; }
+.detail-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+
+.detail-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.5rem; }
+.detail-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: 1.5rem; }
+.detail-card-title { font-size: .75rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1rem; }
+.detail-row { display: flex; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
+.detail-row:last-child { border-bottom: none; }
+.detail-row-label { color: var(--text-dim); }
+.detail-row-val   { color: var(--text); font-weight: 600; text-align: right; }
+
+/* Tételek */
+.tetelek-wrap { margin-top: 1.5rem; }
+.tetel-item { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
+.tetel-item:last-child { border-bottom: none; }
+.tetel-nev  { flex: 1; color: var(--text); }
+.tetel-tipo { font-size: .68rem; color: var(--text-dim); }
+.tetel-ar   { font-weight: 700; color: var(--shimano); white-space: nowrap; }
+.tetel-del  { background: none; border: none; color: var(--text-dim); cursor: pointer; padding: .2rem .4rem; border-radius: var(--r); transition: all var(--t); }
+.tetel-del:hover { color: var(--red); }
+
+.tetel-total { display: flex; justify-content: flex-end; padding-top: .75rem; font-size: 1rem; font-weight: 800; color: var(--shimano); }
+
+.add-tetel-form { background: var(--bg3); border-radius: var(--r); padding: 1rem; margin-top: 1rem; }
+.add-tetel-form .form-row { grid-template-columns: 2fr 1fr 1fr 1fr auto; align-items: end; gap: .5rem; }
+
+/* ── NAPTÁR ── */
+.naptar-nav { display: flex; align-items: center; gap: 1rem; }
+#naptar-title { font-weight: 700; font-size: .95rem; min-width: 200px; text-align: center; }
+.naptar-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: .5rem; }
+.naptar-day { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r2); padding: .75rem; min-height: 120px; }
+.naptar-day-head { font-size: .72rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: .5rem; }
+.naptar-day-date { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: .5rem; }
+.naptar-day.today { border-color: var(--shimano); background: rgba(0,154,217,.08); }
+.naptar-event { font-size: .72rem; padding: .2rem .5rem; border-radius: 4px; margin-bottom: .25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.naptar-event-foglalas  { background: rgba(0,154,217,.2);  color: var(--shimano); }
+.naptar-event-munkalap  { background: rgba(245,158,11,.2); color: var(--orange); }
+
+/* ── TOAST ── */
+.toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; display: flex; flex-direction: column; gap: .5rem; }
+.toast {
+  background: var(--bg2); border-left: 3px solid var(--shimano); border-radius: var(--r);
+  padding: .75rem 1.25rem; font-size: .85rem; max-width: 300px;
+  transform: translateX(120%); transition: transform .3s ease; box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.toast.show { transform: translateX(0); }
+.toast.success { border-color: var(--green); }
+.toast.error   { border-color: var(--red); }
+.toast.warning { border-color: var(--orange); }
+
+/* ── RESZPONZÍV ── */
+@media (max-width: 900px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main-content { margin-left: 0; }
+  .hamburger-admin { display: flex; align-items: center; justify-content: center; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .naptar-grid { grid-template-columns: repeat(4,1fr); }
+}
+@media (max-width: 600px) {
+  .main-content { padding: 1.25rem; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .naptar-grid { grid-template-columns: repeat(3,1fr); }
+  .add-tetel-form .form-row { grid-template-columns: 1fr 1fr; }
+}

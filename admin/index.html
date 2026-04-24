@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GyulaBringa – Admin Panel</title>
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-box">
+      <div class="login-logo">
+        <img src="/images/logo.png" alt="GyulaBringa" class="login-logo-img">
+        <div>
+          <div class="login-logo-title">GyulaBringa</div>
+          <div class="login-logo-sub">Admin Panel</div>
+        </div>
+      </div>
+      <div class="login-err" id="login-err"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="gyulabringa@gmail.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Jelszó</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary" id="login-btn" style="width:100%;">Belépés</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin-wrap" class="admin-wrap" style="display:none;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/images/logo.png" alt="GyulaBringa">
+        <div class="sidebar-logo-text">
+          <div class="sidebar-title">GyulaBringa</div>
+          <div class="sidebar-sub">Admin Panel</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-ico">📊</span> Dashboard
+        </button>
+        <button class="nav-item" data-tab="foglalasok">
+          <span class="nav-ico">📅</span> Foglalások
+          <span class="nav-badge" id="badge-foglalas"></span>
+        </button>
+        <button class="nav-item" data-tab="munkalapok">
+          <span class="nav-ico">📋</span> Munkalapok
+        </button>
+        <button class="nav-item" data-tab="uj-munkalap">
+          <span class="nav-ico">➕</span> Új munkalap
+        </button>
+        <button class="nav-item" data-tab="naptar">
+          <span class="nav-ico">📆</span> Naptár
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" id="sidebar-user"></div>
+        <button class="btn-logout" id="logout-btn">Kilépés</button>
+        <a href="/" class="btn-weboldal" target="_blank">🌐 Weboldal</a>
+      </div>
+    </aside>
+
+    <!-- FŐ TARTALOM -->
+    <main class="main-content">
+
+      <!-- HAMBURGER mobilon -->
+      <button class="hamburger-admin" id="hamburger-admin">☰</button>
+
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard" class="tab active">
+        <div class="tab-header">
+          <h1>Dashboard</h1>
+          <div class="tab-header-sub" id="today-date"></div>
+        </div>
+        <div class="stat-grid" id="stat-grid">
+          <div class="stat-card loading">Betöltés...</div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="dashboard-section">
+            <div class="section-title">🔔 Függőben lévő foglalások</div>
+            <div id="dash-foglalasok"></div>
+          </div>
+          <div class="dashboard-section">
+            <div class="section-title">🔧 Nyitott munkalapok</div>
+            <div id="dash-munkalapok"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOGLALÁSOK -->
+      <div id="tab-foglalasok" class="tab">
+        <div class="tab-header">
+          <h1>Foglalások</h1>
+          <div class="tab-filters">
+            <button class="filter-btn active" data-allapot="">Összes</button>
+            <button class="filter-btn" data-allapot="fuggeben">Függőben</button>
+            <button class="filter-btn" data-allapot="jovahagyva">Jóváhagyva</button>
+            <button class="filter-btn" data-allapot="munkalap">Munkalap</button>
+            <button class="filter-btn" data-allapot="elutasitva">Elutasítva</button>
+          </div>
+        </div>
+        <div id="foglalasok-list" class="list-wrap"></div>
+      </div>
+
+      <!-- MUNKALAPOK -->
+      <div id="tab-munkalapok" class="tab">
+        <div class="tab-header">
+          <h1>Munkalapok</h1>
+          <div class="tab-filters">
+            <button class="filter-btn active" data-allapot="">Összes</button>
+            <button class="filter-btn" data-allapot="nyitott">Nyitott</button>
+            <button class="filter-btn" data-allapot="folyamatban">Folyamatban</button>
+            <button class="filter-btn" data-allapot="kesz">Kész</button>
+            <button class="filter-btn" data-allapot="archiv">Archív</button>
+          </div>
+        </div>
+        <div id="munkalapok-list" class="list-wrap"></div>
+
+        <!-- Munkalap részletek panel -->
+        <div id="munkalap-detail" class="detail-panel" style="display:none;">
+          <div class="detail-header">
+            <button class="btn-back" id="back-to-list">← Vissza</button>
+            <h2 id="detail-title">Munkalap</h2>
+            <div class="detail-actions" id="detail-actions"></div>
+          </div>
+          <div id="detail-content"></div>
+        </div>
+      </div>
+
+      <!-- ÚJ MUNKALAP -->
+      <div id="tab-uj-munkalap" class="tab">
+        <div class="tab-header"><h1>Új munkalap</h1></div>
+        <form id="uj-munkalap-form" class="form-card">
+          <div class="form-section-title">👤 Ügyfél adatok</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ügyfél neve *</label>
+              <input type="text" id="nm-nev" placeholder="Kovács János" required>
+            </div>
+            <div class="form-group">
+              <label>Telefon *</label>
+              <input type="tel" id="nm-tel" placeholder="+36 30 123 4567" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="nm-email" placeholder="pelda@email.hu">
+          </div>
+
+          <div class="form-section-title">🚲 Kerékpár adatok</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Márka</label>
+              <input type="text" id="nm-marka" placeholder="Trek, Giant, Cube...">
+            </div>
+            <div class="form-group">
+              <label>Típus</label>
+              <select id="nm-tipus">
+                <option value="">— Válassz —</option>
+                <option>Városi</option>
+                <option>MTB</option>
+                <option>Országúti</option>
+                <option>E-bike</option>
+                <option>Gravel</option>
+                <option>Egyéb</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Évjárat</label>
+              <input type="text" id="nm-ev" placeholder="2022">
+            </div>
+          </div>
+
+          <div class="form-section-title">🔧 Munka adatok</div>
+          <div class="form-group">
+            <label>Elvégzendő feladat *</label>
+            <textarea id="nm-feladat" rows="3" placeholder="Pl: Hidraulikus fék légtelenítés, váltó állítás..." required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prioritás</label>
+              <select id="nm-prioritas">
+                <option value="alacsony">🟢 Alacsony</option>
+                <option value="normal" selected>🟡 Normál</option>
+                <option value="magas">🟠 Magas</option>
+                <option value="surgos">🔴 Sürgős</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Becsült ár (Ft)</label>
+              <input type="number" id="nm-ar" placeholder="5000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Megjegyzés</label>
+            <textarea id="nm-megj" rows="2" placeholder="Belső megjegyzés..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">📋 Munkalap létrehozása</button>
+        </form>
+      </div>
+
+      <!-- NAPTÁR -->
+      <div id="tab-naptar" class="tab">
+        <div class="tab-header">
+          <h1>Naptár</h1>
+          <div class="naptar-nav">
+            <button class="btn btn-ghost" id="prev-week">← Előző</button>
+            <span id="naptar-title"></span>
+            <button class="btn btn-ghost" id="next-week">Következő →</button>
+          </div>
+        </div>
+        <div id="naptar-grid" class="naptar-grid"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="/admin/js/admin.js"></script>
+</body>
+</html>

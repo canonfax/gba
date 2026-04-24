@@ -1,0 +1,388 @@
+/* ═══════════════════════════════════════════
+   GyulaBringa · style.css
+   Közös alap – változók, reset, nav, footer,
+   gombok, animációk, cookie sáv
+   ═══════════════════════════════════════════ */
+
+/* Google Fonts – Nunito Sans (csak Ő ő Ű ű karakterekhez) */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap');
+
+/* ── Frutiger – Shimano hivatalos betűtípus ── */
+@font-face {
+  font-family: 'Frutiger';
+  src: url('/fonts/Frutiger.ttf') format('truetype');
+  font-weight: 300 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-014F, U+0152-016F, U+0172-FFFF;
+}
+@font-face {
+  font-family: 'Frutiger';
+  src: url('/fonts/Frutiger_bold.ttf') format('truetype');
+  font-weight: 600 700 800 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-014F, U+0152-016F, U+0172-FFFF;
+}
+/* Nunito Sans – csak Ő ő Ű ű karakterekhez */
+@font-face {
+  font-family: 'Frutiger';
+  src: local('Nunito Sans'), local('NunitoSans');
+  font-weight: 300 400;
+  font-display: swap;
+  unicode-range: U+0150-0151, U+0170-0171;
+}
+@font-face {
+  font-family: 'Frutiger';
+  src: local('Nunito Sans Bold'), local('NunitoSans-Bold');
+  font-weight: 600 700 800 900;
+  font-display: swap;
+  unicode-range: U+0150-0151, U+0170-0171;
+}
+
+/* ── Változók ── */
+:root {
+  --white:       #ffffff;
+  --off:         #f4f7fb;
+  --off2:        #e8eef6;
+  --shimano:     #009AD9;
+  --shimano-d:   #0077aa;
+  --shimano-dd:  #005580;
+  --shimano-p:   #e6f6fd;
+  --ink:         #0d1520;
+  --ink-mid:     #2a3a4a;
+  --ink-dim:     #5a7080;
+  --gray:        #e0e8f0;
+  --green:       #10b981;
+  --orange:      #f59e0b;
+  --red:         #ef4444;
+
+  --font-display: 'Frutiger', 'Nunito Sans', sans-serif;
+  --font-body:    'Frutiger', 'Nunito Sans', sans-serif;
+
+  --shadow-sm:  0 1px 4px rgba(0,0,0,.06);
+  --shadow:     0 4px 20px rgba(0,0,0,.1);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,.14);
+  --shadow-xl:  0 24px 60px rgba(0,0,0,.18);
+
+  --r:     6px;
+  --r2:    12px;
+  --r3:    20px;
+  --t:     .2s ease;
+  --nav-h: 76px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--font-body);
+  background: var(--white);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  font-synthesis: none;
+}
+img { max-width: 100%; height: auto; display: block; }
+a   { text-decoration: none; color: inherit; }
+button { font-family: var(--font-body); cursor: pointer; }
+
+/* ── Tipográfia ── */
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 900; line-height: 1.05;
+  letter-spacing: .02em; color: var(--white);
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 900; line-height: 1.1;
+  letter-spacing: .01em; color: var(--ink);
+  text-transform: uppercase;
+}
+.section-label {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--shimano);
+  margin-bottom: .75rem;
+}
+.section-label::before {
+  content: ''; width: 20px; height: 2px;
+  background: var(--shimano); border-radius: 2px; flex-shrink: 0;
+}
+
+/* ── Gombok ── */
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-body); font-size: .88rem; font-weight: 700;
+  padding: .65rem 1.5rem; border-radius: 50px; border: none;
+  cursor: pointer; transition: all var(--t);
+  text-decoration: none; white-space: nowrap; letter-spacing: .02em;
+}
+.btn-primary {
+  background: var(--shimano); color: var(--white);
+  box-shadow: 0 4px 14px rgba(0,154,217,.35);
+}
+.btn-primary:hover { background: var(--shimano-d); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,154,217,.45); }
+.btn-outline {
+  background: transparent; color: var(--shimano);
+  border: 2px solid var(--shimano);
+}
+.btn-outline:hover { background: var(--shimano); color: var(--white); transform: translateY(-2px); }
+.btn-white {
+  background: var(--white); color: var(--shimano); font-weight: 800;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+}
+.btn-white:hover { background: var(--off); transform: translateY(-2px); }
+.btn-sm { padding: .45rem 1rem; font-size: .8rem; }
+
+/* ── Szekció alap ── */
+.section { padding: clamp(4rem, 7vw, 6rem) clamp(1.5rem, 4vw, 2.5rem); }
+.section-inner { max-width: 1300px; margin: 0 auto; }
+
+/* ── Form elemek (közös) ── */
+.form-label {
+  font-size: .72rem; font-weight: 700; color: var(--ink-dim);
+  text-transform: uppercase; letter-spacing: .08em; display: block; margin-bottom: .4rem;
+}
+.form-input {
+  background: var(--off); border: 1.5px solid var(--gray);
+  border-radius: var(--r); padding: .7rem 1rem;
+  font-family: var(--font-body); font-size: .9rem; color: var(--ink);
+  transition: all var(--t); width: 100%;
+}
+.form-input:focus { outline: none; border-color: var(--shimano); box-shadow: 0 0 0 3px rgba(0,154,217,.12); }
+textarea.form-input { resize: vertical; }
+select.form-input   { appearance: none; cursor: pointer; }
+
+/* ── Page hero (aloldalak) ── */
+.page-hero {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--ink-mid) 100%);
+  padding: 4rem clamp(1.5rem, 4vw, 2.5rem) 3.5rem;
+  text-align: center; position: relative; overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: url('/images/back.jpg') center/cover no-repeat;
+  opacity: .12; pointer-events: none;
+}
+.page-hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+.page-hero .section-label { color: rgba(255,255,255,.65); justify-content: center; }
+.page-hero .section-label::before { background: rgba(255,255,255,.4); }
+.page-hero p { color: rgba(255,255,255,.75); font-size: 1.05rem; margin-top: .75rem; }
+
+/* ── Navigáció ── */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h); background: var(--white);
+  border-bottom: 2px solid var(--shimano);
+  display: flex; align-items: center;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+  box-shadow: 0 2px 20px rgba(0,154,217,.15);
+}
+.nav-inner {
+  width: 100%; max-width: 1300px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: .85rem; text-decoration: none;
+}
+.nav-logo-imgs {
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+}
+.nav-logo-imgs img { height: 26px; width: auto; object-fit: contain; }
+.nav-logo-divider  { width: 1px; height: 38px; background: var(--gray); }
+.nav-logo-text h1  {
+  font-family: var(--font-display); font-size: 1.4rem; font-weight: 900;
+  color: var(--shimano); letter-spacing: .04em; line-height: 1;
+  margin: 0; text-transform: uppercase;
+}
+.nav-logo-text span { font-size: .68rem; color: var(--ink-dim); letter-spacing: .1em; text-transform: uppercase; font-weight: 600; }
+
+.nav-links { display: flex; align-items: center; gap: .15rem; list-style: none; }
+.nav-links a {
+  padding: .5rem .9rem; border-radius: var(--r);
+  font-size: .85rem; font-weight: 600; color: var(--ink-mid);
+  transition: all var(--t); position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 2px; left: 50%;
+  transform: translateX(-50%); width: 0; height: 2px;
+  background: var(--shimano); border-radius: 2px; transition: width var(--t);
+}
+.nav-links a:hover { color: var(--shimano); }
+.nav-links a:hover::after { width: 60%; }
+.nav-links a.active { color: var(--shimano); }
+.nav-links a.active::after { width: 60%; }
+.nav-cta {
+  background: var(--shimano) !important; color: var(--white) !important;
+  padding: .5rem 1.25rem !important; border-radius: 50px !important;
+  box-shadow: 0 4px 14px rgba(0,154,217,.35) !important;
+}
+.nav-cta::after { display: none !important; }
+.nav-cta:hover  { background: var(--shimano-d) !important; transform: translateY(-1px); }
+
+/* Hamburger */
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: .4rem;
+}
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--shimano); border-radius: 2px; transition: all .25s; }
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobil menü */
+.mobile-menu {
+  display: none; position: fixed;
+  top: var(--nav-h); left: 0; right: 0;
+  background: var(--white); z-index: 999;
+  border-bottom: 2px solid var(--shimano);
+  flex-direction: column; padding: 1rem;
+  gap: .25rem; box-shadow: var(--shadow-lg);
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  padding: .75rem 1rem; border-radius: var(--r);
+  font-weight: 600; color: var(--ink-mid); transition: all var(--t);
+}
+.mobile-menu a:hover { background: var(--shimano-p); color: var(--shimano); }
+
+/* ── Page wrapper ── */
+.page { padding-top: var(--nav-h); min-height: 100vh; }
+
+/* ── Futó szalag ── */
+.marquee-wrap { background: var(--shimano); padding: .85rem 0; overflow: hidden; }
+.marquee-track {
+  display: flex; gap: 3rem;
+  animation: marquee 28s linear infinite; width: max-content;
+}
+.marquee-track span {
+  font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+  color: var(--white); letter-spacing: .1em; text-transform: uppercase;
+  white-space: nowrap; display: flex; align-items: center; gap: .75rem;
+}
+.marquee-track span::before { content: '•'; opacity: .5; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── Footer ── */
+footer {
+  background: var(--ink); color: rgba(255,255,255,.6);
+  padding: 3.5rem clamp(1.5rem, 4vw, 2.5rem) 2rem;
+}
+.footer-inner {
+  max-width: 1300px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem;
+}
+.footer-logo { font-family: var(--font-display); font-size: 1.4rem; font-weight: 900; color: var(--white); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .35rem; }
+.footer-logo span { color: var(--shimano); }
+.footer-logo-sub { font-size: .68rem; color: rgba(255,255,255,.4); letter-spacing: .1em; text-transform: uppercase; }
+.footer-desc { font-size: .85rem; line-height: 1.7; margin-top: 1rem; }
+.footer-title { font-family: var(--font-display); font-size: .82rem; font-weight: 800; color: var(--white); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1rem; }
+.footer-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.footer-list li { font-size: .85rem; }
+.footer-list a { color: rgba(255,255,255,.6); transition: color var(--t); }
+.footer-list a:hover { color: var(--shimano); }
+.footer-contact-item { display: flex; align-items: flex-start; gap: .5rem; font-size: .85rem; margin-bottom: .5rem; }
+.footer-contact-ico  { color: var(--shimano); flex-shrink: 0; }
+.footer-contact-item a { color: rgba(255,255,255,.7); transition: color var(--t); }
+.footer-contact-item a:hover { color: var(--shimano); }
+.footer-divider { border: none; border-top: 1px solid rgba(255,255,255,.08); margin: 2rem 0 1.5rem; }
+.footer-bottom { max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: .78rem; }
+.footer-bottom-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.footer-bottom-links a { color: rgba(255,255,255,.4); transition: color var(--t); }
+.footer-bottom-links a:hover { color: var(--shimano); }
+
+/* ── Animációk ── */
+.fade-in { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.delay-1 { transition-delay: .1s; }
+.delay-2 { transition-delay: .2s; }
+.delay-3 { transition-delay: .3s; }
+.delay-4 { transition-delay: .4s; }
+
+/* ── Toast ── */
+.toast-container { position: fixed; bottom: 5.5rem; right: 1.5rem; z-index: 4000; display: flex; flex-direction: column; gap: .5rem; }
+.toast {
+  background: var(--white); border-left: 3px solid var(--shimano);
+  border-radius: var(--r); padding: .75rem 1.25rem; font-size: .85rem;
+  box-shadow: var(--shadow-lg); max-width: 300px;
+  transform: translateX(120%); transition: transform .3s ease;
+}
+.toast.show    { transform: translateX(0); }
+.toast.success { border-color: var(--green); }
+.toast.error   { border-color: var(--red); }
+.toast.warning { border-color: var(--orange); }
+
+/* ══════════════════════════════════════════
+   COOKIE SÁV
+   ══════════════════════════════════════════ */
+#cookie-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000;
+  background: var(--ink); border-top: 2px solid var(--shimano);
+  padding: 1.25rem clamp(1.5rem, 4vw, 2.5rem);
+  transform: translateY(100%); transition: transform .4s ease;
+  box-shadow: 0 -8px 30px rgba(0,0,0,.3);
+}
+#cookie-banner.show { transform: translateY(0); }
+
+.cookie-inner {
+  max-width: 1300px; margin: 0 auto;
+  display: flex; align-items: flex-start; gap: 2rem; flex-wrap: wrap;
+}
+.cookie-text { flex: 1; }
+.cookie-title { font-family: var(--font-display); font-size: .95rem; font-weight: 800; color: var(--white); text-transform: uppercase; margin-bottom: .4rem; }
+.cookie-desc  { font-size: .82rem; color: rgba(255,255,255,.65); line-height: 1.6; }
+.cookie-desc a { color: var(--shimano); text-decoration: underline; }
+
+.cookie-settings { background: var(--ink-mid); border-radius: var(--r2); padding: .85rem 1.1rem; display: none; margin-top: 1rem; }
+.cookie-settings.open { display: block; }
+.cookie-setting-row { display: flex; align-items: center; justify-content: space-between; padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.08); font-size: .82rem; }
+.cookie-setting-row:last-child { border-bottom: none; }
+.cookie-setting-label { color: rgba(255,255,255,.8); }
+.cookie-setting-sub   { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: .15rem; }
+
+/* Toggle switch */
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: rgba(255,255,255,.2);
+  border-radius: 50px; cursor: pointer; transition: .3s;
+}
+.toggle-slider::before {
+  content: ''; position: absolute; width: 16px; height: 16px;
+  left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .3s;
+}
+.toggle input:checked + .toggle-slider { background: var(--shimano); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(18px); }
+.toggle input:disabled + .toggle-slider { opacity: .5; cursor: not-allowed; }
+
+.cookie-btns { display: flex; flex-direction: column; gap: .5rem; flex-shrink: 0; min-width: 160px; }
+.cookie-btn {
+  padding: .55rem 1rem; border-radius: 50px; border: none;
+  font-family: var(--font-body); font-size: .82rem; font-weight: 700;
+  cursor: pointer; transition: all var(--t); text-align: center;
+}
+.cookie-btn-accept   { background: var(--shimano); color: #fff; }
+.cookie-btn-accept:hover { background: var(--shimano-d); }
+.cookie-btn-necessary { background: transparent; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.7); }
+.cookie-btn-necessary:hover { border-color: var(--shimano); color: var(--shimano); }
+.cookie-btn-settings  { background: transparent; color: rgba(255,255,255,.5); font-size: .75rem; text-align: center; padding: .3rem; }
+.cookie-btn-settings:hover { color: var(--white); }
+
+/* ── Reszponzív ── */
+@media (max-width: 900px) {
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .cookie-inner { flex-direction: column; gap: 1rem; }
+  .cookie-btns { flex-direction: row; min-width: unset; flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .section { padding: 3rem 1.25rem; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .cookie-btns { flex-direction: column; }
+}

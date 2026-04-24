@@ -1,0 +1,43 @@
+/* services.css */
+.svc-block { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.svc-block-reverse { direction: rtl; }
+.svc-block-reverse > * { direction: ltr; }
+.svc-img { position: relative; border-radius: var(--r2); overflow: visible; }
+.svc-img img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--r2); box-shadow: var(--shadow-xl); }
+.svc-img-badge {
+  position: absolute; bottom: -1rem; right: -1rem;
+  background: var(--shimano); border-radius: var(--r2); padding: .85rem 1.25rem;
+  display: flex; align-items: center; gap: .65rem;
+  box-shadow: var(--shadow-lg); color: var(--white);
+}
+
+.svc-items { display: flex; flex-direction: column; gap: .85rem; margin-top: 1.5rem; }
+.svc-item {
+  display: flex; align-items: flex-start; gap: .85rem;
+  background: var(--off); border: 1px solid var(--gray);
+  border-radius: var(--r); padding: .85rem 1rem;
+  transition: border-color var(--t);
+}
+.svc-item:hover { border-color: var(--shimano); }
+.svc-item-ico { font-size: 1.3rem; flex-shrink: 0; }
+.svc-item b   { display: block; font-size: .9rem; color: var(--ink); margin-bottom: .15rem; }
+.svc-item span { font-size: .82rem; color: var(--ink-dim); }
+
+.price-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+.price-card {
+  background: var(--ink); border-radius: var(--r2); padding: 1.75rem;
+}
+.price-card-title { font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--white); text-transform: uppercase; margin-bottom: 1rem; }
+.price-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: .5rem 0; border-bottom: 1px solid rgba(255,255,255,.07); font-size: .85rem;
+}
+.price-row:last-child { border-bottom: none; }
+.price-row span:first-child { color: rgba(255,255,255,.7); }
+.price-row span:last-child  { color: var(--white); font-weight: 700; font-family: monospace; white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .svc-block { grid-template-columns: 1fr; gap: 2.5rem; }
+  .svc-block-reverse { direction: ltr; }
+  .price-grid { grid-template-columns: 1fr; }
+}

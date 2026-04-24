@@ -1,0 +1,115 @@
+/* ═══════════════════════════════════════════
+   legal.css – Jogi oldalak
+   Impresszum · Cookie tájékoztató · GDPR
+   ═══════════════════════════════════════════ */
+
+.legal-section {
+  background: var(--white);
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 2.5rem);
+}
+.legal-inner {
+  max-width: 860px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 1.25rem;
+}
+
+/* ── Kártya ── */
+.legal-card {
+  background: var(--white); border: 1px solid var(--gray);
+  border-radius: var(--r2); padding: 1.75rem 2rem;
+  box-shadow: var(--shadow-sm);
+}
+.legal-card-highlight {
+  background: var(--shimano-p); border-color: rgba(0,154,217,.3);
+  display: flex; gap: 1.25rem; align-items: flex-start;
+}
+.legal-highlight-ico { font-size: 2rem; flex-shrink: 0; }
+
+/* ── Tipográfia ── */
+.legal-h2 {
+  font-family: var(--font-display); font-size: 1.1rem;
+  font-weight: 800; color: var(--ink); text-transform: uppercase;
+  letter-spacing: .04em; margin-bottom: 1rem;
+}
+.legal-card p {
+  font-size: .92rem; color: var(--ink-dim); line-height: 1.8; margin-bottom: .75rem;
+}
+.legal-card p:last-child { margin-bottom: 0; }
+.legal-card p strong { color: var(--ink); }
+.legal-note {
+  font-size: .8rem !important; color: var(--gray) !important;
+  font-style: italic; margin-top: .75rem !important;
+}
+
+/* ── Táblázat sorok ── */
+.legal-table { border: 1px solid var(--gray); border-radius: var(--r); overflow: hidden; margin-bottom: 1rem; }
+.legal-row { display: grid; grid-template-columns: 180px 1fr; border-bottom: 1px solid var(--gray); }
+.legal-row:last-child { border-bottom: none; }
+.legal-key {
+  background: var(--off); padding: .65rem 1rem;
+  font-size: .78rem; font-weight: 700; color: var(--ink-dim);
+  letter-spacing: .06em; text-transform: uppercase;
+  border-right: 1px solid var(--gray);
+}
+.legal-val { padding: .65rem 1rem; font-size: .88rem; color: var(--ink-mid); }
+.legal-val a { color: var(--shimano); }
+
+/* ── Cookie táblázat ── */
+.cookie-table { border: 1px solid var(--gray); border-radius: var(--r); overflow: hidden; margin-bottom: 1rem; }
+.cookie-table-head {
+  display: grid; grid-template-columns: 160px 110px 1fr 90px;
+  background: var(--off2); padding: .6rem 1rem;
+  font-size: .7rem; font-weight: 700; color: var(--ink-dim);
+  letter-spacing: .08em; text-transform: uppercase; gap: 1rem;
+}
+.cookie-table-row {
+  display: grid; grid-template-columns: 160px 110px 1fr 90px;
+  padding: .75rem 1rem; gap: 1rem; align-items: center;
+  border-top: 1px solid var(--gray); color: var(--ink-mid);
+  font-size: .85rem;
+}
+.cookie-name { font-family: monospace; font-size: .82rem; background: var(--off2); padding: .2rem .5rem; border-radius: 4px; color: var(--shimano); }
+.cookie-badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: .2rem .6rem; border-radius: 50px; }
+.cookie-badge-tech { background: var(--shimano-p); color: var(--shimano); }
+.cookie-badge-opt  { background: #ecfdf5; color: var(--green); }
+
+/* ── Böngésző linkek ── */
+.browser-links { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+.browser-link {
+  padding: .4rem .9rem; background: var(--off); border: 1px solid var(--gray);
+  border-radius: 50px; font-size: .82rem; font-weight: 600; color: var(--ink-mid);
+  transition: all var(--t);
+}
+.browser-link:hover { border-color: var(--shimano); color: var(--shimano); background: var(--shimano-p); }
+
+/* ── Kapcsolat gomb ── */
+.legal-contact-btn {
+  display: inline-flex; align-items: center; gap: .5rem; margin-top: .75rem;
+  padding: .65rem 1.25rem; background: var(--off); border: 1.5px solid var(--gray);
+  border-radius: 50px; font-size: .88rem; font-weight: 600; color: var(--ink-mid);
+  transition: all var(--t);
+}
+.legal-contact-btn:hover { border-color: var(--shimano); color: var(--shimano); background: var(--shimano-p); }
+
+/* ── GDPR fejezetek ── */
+.gdpr-toc {
+  background: var(--off); border: 1px solid var(--gray);
+  border-radius: var(--r2); padding: 1.5rem 2rem; margin-bottom: 1.25rem;
+}
+.gdpr-toc-title { font-family: var(--font-display); font-size: .85rem; font-weight: 800; color: var(--ink); text-transform: uppercase; margin-bottom: .85rem; }
+.gdpr-toc ol { padding-left: 1.25rem; }
+.gdpr-toc li { font-size: .85rem; color: var(--shimano); margin-bottom: .35rem; }
+.gdpr-toc li a { color: var(--shimano); text-decoration: underline; text-underline-offset: 2px; }
+
+.gdpr-section { scroll-margin-top: calc(var(--nav-h) + 1rem); }
+
+/* ── Reszponzív ── */
+@media (max-width: 600px) {
+  .legal-card { padding: 1.25rem; }
+  .legal-row { grid-template-columns: 120px 1fr; }
+  .cookie-table-head,
+  .cookie-table-row { grid-template-columns: 1fr 1fr; }
+  .cookie-table-head span:nth-child(3),
+  .cookie-table-row span:nth-child(3),
+  .cookie-table-head span:nth-child(4),
+  .cookie-table-row span:nth-child(4) { display: none; }
+}
