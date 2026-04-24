@@ -1,95 +1,95 @@
 // ═══════════════════════════════════════════
-//  db.js – SQLite adatbázis inicializálás
-//  Táblák: admin, foglalasok, munkalapok, munkalap_tetelek
+//  db.js – SQLite adatbázis (sqlite3 csomag)
+//  Windows-on is működik fordítás nélkül
 // ═══════════════════════════════════════════
 
-const Database = require('better-sqlite3');
-const path     = require('path');
-const bcrypt   = require('bcryptjs');
+const sqlite3 = require('sqlite3').verbose();
+const path    = require('path');
+const bcrypt  = require('bcryptjs');
+const fs      = require('fs');
 
-const DB_PATH = path.join(__dirname, 'data', 'gyulabringa.db');
-const db      = new Database(DB_PATH);
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-// WAL mód – gyorsabb, biztonságosabb
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+const DB_PATH = path.join(DATA_DIR, 'gyulabringa.db');
+const db = new sqlite3.Database(DB_PATH);
 
-// ── Táblák létrehozása ──
-db.exec(`
+// Promise wrapperek – a sqlite3 csomag callback alapú,
+// ezeket a helpereket használjuk az async/await helyett
+db.run2  = (sql, params=[]) => new Promise((res, rej) => db.run(sql, params, function(e) { e ? rej(e) : res(this); }));
+db.get2  = (sql, params=[]) => new Promise((res, rej) => db.get(sql, params, (e, r) => e ? rej(e) : res(r)));
+db.all2  = (sql, params=[]) => new Promise((res, rej) => db.all(sql, params, (e, r) => e ? rej(e) : res(r)));
 
-  -- Admin felhasználó
-  CREATE TABLE IF NOT EXISTS admin (
-    id        INTEGER PRIMARY KEY,
-    email     TEXT    NOT NULL UNIQUE,
-    password  TEXT    NOT NULL,
-    nev       TEXT    NOT NULL
-  );
+// WAL mód és foreign keys
+db.serialize(() => {
+  db.run('PRAGMA journal_mode = WAL');
+  db.run('PRAGMA foreign_keys = ON');
 
-  -- Foglalások (ügyfelek által beküldött)
-  CREATE TABLE IF NOT EXISTS foglalasok (
-    id            TEXT    PRIMARY KEY,
-    nev           TEXT    NOT NULL,
-    telefon       TEXT    NOT NULL,
-    email         TEXT,
-    szolgaltatas  TEXT    NOT NULL,
-    bike_tipus    TEXT,
-    datum         TEXT    NOT NULL,
-    idopont       TEXT    NOT NULL,
-    megjegyzes    TEXT,
-    allapot       TEXT    NOT NULL DEFAULT 'fuggeben',
-    -- fuggeben | jovahagyva | elutasitva | munkalap
-    letrehozva    TEXT    NOT NULL DEFAULT (datetime('now')),
-    frissitve     TEXT    NOT NULL DEFAULT (datetime('now'))
-  );
+  // ── Táblák létrehozása ──
+  db.run(`CREATE TABLE IF NOT EXISTS admin (
+    id       INTEGER PRIMARY KEY,
+    email    TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    nev      TEXT NOT NULL
+  )`);
 
-  -- Munkalapok
-  CREATE TABLE IF NOT EXISTS munkalapok (
-    id            TEXT    PRIMARY KEY,
-    foglalas_id   TEXT    REFERENCES foglalasok(id),
-    ugyfel_nev    TEXT    NOT NULL,
-    ugyfel_tel    TEXT    NOT NULL,
-    ugyfel_email  TEXT,
-    bike_marka    TEXT,
-    bike_tipus    TEXT,
-    bike_ev       TEXT,
-    feladat       TEXT    NOT NULL,
-    megjegyzes    TEXT,
-    allapot       TEXT    NOT NULL DEFAULT 'nyitott',
-    -- nyitott | folyamatban | kesz | archiv
-    prioritas     TEXT    NOT NULL DEFAULT 'normal',
-    -- alacsony | normal | magas | surgos
-    becsult_ar    REAL,
-    vegso_ar      REAL,
-    letrehozva    TEXT    NOT NULL DEFAULT (datetime('now')),
-    frissitve     TEXT    NOT NULL DEFAULT (datetime('now')),
-    lezarva       TEXT
-  );
+  db.run(`CREATE TABLE IF NOT EXISTS foglalasok (
+    id           TEXT PRIMARY KEY,
+    nev          TEXT NOT NULL,
+    telefon      TEXT NOT NULL,
+    email        TEXT,
+    szolgaltatas TEXT NOT NULL,
+    bike_tipus   TEXT,
+    datum        TEXT NOT NULL,
+    idopont      TEXT NOT NULL,
+    megjegyzes   TEXT,
+    allapot      TEXT NOT NULL DEFAULT 'fuggeben',
+    letrehozva   TEXT NOT NULL DEFAULT (datetime('now')),
+    frissitve    TEXT NOT NULL DEFAULT (datetime('now'))
+  )`);
 
-  -- Munkalap tételek (elvégzett munkák, alkatrészek)
-  CREATE TABLE IF NOT EXISTS munkalap_tetelek (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    munkalap_id   TEXT    NOT NULL REFERENCES munkalapok(id) ON DELETE CASCADE,
-    megnevezes    TEXT    NOT NULL,
-    tipus         TEXT    NOT NULL DEFAULT 'munka',
-    -- munka | alkatresz | egyeb
-    mennyiseg     REAL    NOT NULL DEFAULT 1,
-    egyseg_ar     REAL    NOT NULL DEFAULT 0,
-    letrehozva    TEXT    NOT NULL DEFAULT (datetime('now'))
-  );
+  db.run(`CREATE TABLE IF NOT EXISTS munkalapok (
+    id           TEXT PRIMARY KEY,
+    foglalas_id  TEXT REFERENCES foglalasok(id),
+    ugyfel_nev   TEXT NOT NULL,
+    ugyfel_tel   TEXT NOT NULL,
+    ugyfel_email TEXT,
+    bike_marka   TEXT,
+    bike_tipus   TEXT,
+    bike_ev      TEXT,
+    feladat      TEXT NOT NULL,
+    megjegyzes   TEXT,
+    allapot      TEXT NOT NULL DEFAULT 'nyitott',
+    prioritas    TEXT NOT NULL DEFAULT 'normal',
+    becsult_ar   REAL,
+    vegso_ar     REAL,
+    letrehozva   TEXT NOT NULL DEFAULT (datetime('now')),
+    frissitve    TEXT NOT NULL DEFAULT (datetime('now')),
+    lezarva      TEXT
+  )`);
 
-`);
+  db.run(`CREATE TABLE IF NOT EXISTS munkalap_tetelek (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    munkalap_id TEXT NOT NULL REFERENCES munkalapok(id) ON DELETE CASCADE,
+    megnevezes  TEXT NOT NULL,
+    tipus       TEXT NOT NULL DEFAULT 'munka',
+    mennyiseg   REAL NOT NULL DEFAULT 1,
+    egyseg_ar   REAL NOT NULL DEFAULT 0,
+    letrehozva  TEXT NOT NULL DEFAULT (datetime('now'))
+  )`);
 
-// ── Alapértelmezett admin létrehozása ha még nincs ──
-const adminEmail = process.env.ADMIN_EMAIL || 'gyulabringa@gmail.com';
-const adminPass  = process.env.ADMIN_PASS  || 'admin1234';
-const adminNev   = 'Gergely Dániel';
+  // ── Admin létrehozása ha még nincs ──
+  const adminEmail = process.env.ADMIN_EMAIL || 'gyulabringa@gmail.com';
+  const adminPass  = process.env.ADMIN_PASS  || 'admin1234';
 
-const existing = db.prepare('SELECT id FROM admin WHERE id = 1').get();
-if (!existing) {
-  const hash = bcrypt.hashSync(adminPass, 10);
-  db.prepare('INSERT INTO admin (id, email, password, nev) VALUES (1, ?, ?, ?)')
-    .run(adminEmail, hash, adminNev);
-  console.log(`✅ Admin létrehozva: ${adminEmail}`);
-}
+  db.get('SELECT id FROM admin WHERE id = 1', [], async (err, row) => {
+    if (!row) {
+      const hash = await bcrypt.hash(adminPass, 10);
+      db.run('INSERT INTO admin (id, email, password, nev) VALUES (1, ?, ?, ?)',
+        [adminEmail, hash, 'Gergely Dániel']);
+      console.log(`✅ Admin létrehozva: ${adminEmail}`);
+    }
+  });
+});
 
 module.exports = db;

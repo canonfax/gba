@@ -1,155 +1,121 @@
-// ═══════════════════════════════════════════
-//  routes/munkalap.js – Munkalap kezelés
-// ═══════════════════════════════════════════
-
-const express    = require('express');
+const express = require('express');
 const { v4: uuid } = require('uuid');
-const db         = require('../db');
+const db      = require('../db');
 const { authRequired } = require('./auth');
-const router     = express.Router();
+const router  = express.Router();
 
-// ── Összes munkalap ──
-// GET /api/munkalap?allapot=nyitott
-router.get('/', authRequired, (req, res) => {
+// Összes munkalap
+router.get('/', authRequired, async (req, res) => {
   const { allapot } = req.query;
-  let sql = `
-    SELECT m.*,
-      COALESCE(SUM(t.mennyiseg * t.egyseg_ar), 0) as szamolt_ar,
-      COUNT(t.id) as tetel_szam
-    FROM munkalapok m
-    LEFT JOIN munkalap_tetelek t ON t.munkalap_id = m.id
-  `;
-  const params = [];
-  if (allapot) { sql += ' WHERE m.allapot = ?'; params.push(allapot); }
-  sql += ' GROUP BY m.id ORDER BY m.letrehozva DESC';
-  res.json(db.prepare(sql).all(...params));
+  try {
+    const sql = `
+      SELECT m.*, COALESCE(SUM(t.mennyiseg*t.egyseg_ar),0) as szamolt_ar, COUNT(t.id) as tetel_szam
+      FROM munkalapok m LEFT JOIN munkalap_tetelek t ON t.munkalap_id=m.id
+      ${allapot ? 'WHERE m.allapot=?' : ''}
+      GROUP BY m.id ORDER BY m.letrehozva DESC`;
+    res.json(await db.all2(sql, allapot ? [allapot] : []));
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Egy munkalap részletei ──
-// GET /api/munkalap/:id
-router.get('/:id', authRequired, (req, res) => {
-  const m = db.prepare('SELECT * FROM munkalapok WHERE id = ?').get(req.params.id);
-  if (!m) return res.status(404).json({ error: 'Nem található' });
-  const tetelek = db.prepare('SELECT * FROM munkalap_tetelek WHERE munkalap_id = ? ORDER BY id').all(req.params.id);
-  res.json({ ...m, tetelek });
+// Egy munkalap
+router.get('/:id', authRequired, async (req, res) => {
+  try {
+    const m = await db.get2('SELECT * FROM munkalapok WHERE id=?', [req.params.id]);
+    if (!m) return res.status(404).json({ error: 'Nem található' });
+    const tetelek = await db.all2('SELECT * FROM munkalap_tetelek WHERE munkalap_id=? ORDER BY id', [req.params.id]);
+    res.json({ ...m, tetelek });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Új munkalap (manuálisan) ──
-// POST /api/munkalap
-router.post('/', authRequired, (req, res) => {
-  const { ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev,
-          feladat, megjegyzes, prioritas, becsult_ar } = req.body;
-
-  if (!ugyfel_nev || !ugyfel_tel || !feladat) {
-    return res.status(400).json({ error: 'Kötelező mezők hiányoznak' });
-  }
-
-  const id = uuid();
-  db.prepare(`
-    INSERT INTO munkalapok (id, ugyfel_nev, ugyfel_tel, ugyfel_email,
-      bike_marka, bike_tipus, bike_ev, feladat, megjegyzes, prioritas, becsult_ar)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(id, ugyfel_nev, ugyfel_tel, ugyfel_email || null,
-         bike_marka || null, bike_tipus || null, bike_ev || null,
-         feladat, megjegyzes || null, prioritas || 'normal', becsult_ar || null);
-
-  res.json({ ok: true, id });
+// Új munkalap
+router.post('/', authRequired, async (req, res) => {
+  const { ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev, feladat, megjegyzes, prioritas, becsult_ar } = req.body;
+  if (!ugyfel_nev || !ugyfel_tel || !feladat) return res.status(400).json({ error: 'Kötelező mezők hiányoznak' });
+  try {
+    const id = uuid();
+    await db.run2(
+      `INSERT INTO munkalapok (id,ugyfel_nev,ugyfel_tel,ugyfel_email,bike_marka,bike_tipus,bike_ev,feladat,megjegyzes,prioritas,becsult_ar)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+      [id, ugyfel_nev, ugyfel_tel, ugyfel_email||null, bike_marka||null, bike_tipus||null, bike_ev||null, feladat, megjegyzes||null, prioritas||'normal', becsult_ar||null]
+    );
+    res.json({ ok: true, id });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Munkalap módosítása ──
-// PUT /api/munkalap/:id
-router.put('/:id', authRequired, (req, res) => {
-  const m = db.prepare('SELECT id FROM munkalapok WHERE id = ?').get(req.params.id);
-  if (!m) return res.status(404).json({ error: 'Nem található' });
-
-  const { ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev,
-          feladat, megjegyzes, allapot, prioritas, becsult_ar, vegso_ar } = req.body;
-
-  db.prepare(`
-    UPDATE munkalapok SET
-      ugyfel_nev = COALESCE(?, ugyfel_nev),
-      ugyfel_tel = COALESCE(?, ugyfel_tel),
-      ugyfel_email = COALESCE(?, ugyfel_email),
-      bike_marka = COALESCE(?, bike_marka),
-      bike_tipus = COALESCE(?, bike_tipus),
-      bike_ev = COALESCE(?, bike_ev),
-      feladat = COALESCE(?, feladat),
-      megjegyzes = COALESCE(?, megjegyzes),
-      allapot = COALESCE(?, allapot),
-      prioritas = COALESCE(?, prioritas),
-      becsult_ar = COALESCE(?, becsult_ar),
-      vegso_ar = COALESCE(?, vegso_ar),
-      lezarva = CASE WHEN ? = 'kesz' AND allapot != 'kesz' THEN datetime('now') ELSE lezarva END,
-      frissitve = datetime('now')
-    WHERE id = ?
-  `).run(ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev,
-         feladat, megjegyzes, allapot, prioritas, becsult_ar, vegso_ar,
-         allapot, req.params.id);
-
-  res.json({ ok: true });
+// Munkalap módosítása
+router.put('/:id', authRequired, async (req, res) => {
+  const { ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev, feladat, megjegyzes, allapot, prioritas, becsult_ar, vegso_ar } = req.body;
+  try {
+    const m = await db.get2('SELECT id, allapot FROM munkalapok WHERE id=?', [req.params.id]);
+    if (!m) return res.status(404).json({ error: 'Nem található' });
+    const lezarva = allapot === 'kesz' && m.allapot !== 'kesz' ? "datetime('now')" : 'lezarva';
+    await db.run2(`
+      UPDATE munkalapok SET
+        ugyfel_nev=COALESCE(?,ugyfel_nev), ugyfel_tel=COALESCE(?,ugyfel_tel),
+        ugyfel_email=COALESCE(?,ugyfel_email), bike_marka=COALESCE(?,bike_marka),
+        bike_tipus=COALESCE(?,bike_tipus), bike_ev=COALESCE(?,bike_ev),
+        feladat=COALESCE(?,feladat), megjegyzes=COALESCE(?,megjegyzes),
+        allapot=COALESCE(?,allapot), prioritas=COALESCE(?,prioritas),
+        becsult_ar=COALESCE(?,becsult_ar), vegso_ar=COALESCE(?,vegso_ar),
+        lezarva=${lezarva}, frissitve=datetime('now')
+      WHERE id=?`,
+      [ugyfel_nev, ugyfel_tel, ugyfel_email, bike_marka, bike_tipus, bike_ev, feladat, megjegyzes, allapot, prioritas, becsult_ar, vegso_ar, req.params.id]
+    );
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Munkalap törlése ──
-// DELETE /api/munkalap/:id
-router.delete('/:id', authRequired, (req, res) => {
-  const r = db.prepare('DELETE FROM munkalapok WHERE id = ?').run(req.params.id);
-  if (r.changes === 0) return res.status(404).json({ error: 'Nem található' });
-  res.json({ ok: true });
+// Törlés
+router.delete('/:id', authRequired, async (req, res) => {
+  try {
+    const r = await db.run2('DELETE FROM munkalapok WHERE id=?', [req.params.id]);
+    if (r.changes === 0) return res.status(404).json({ error: 'Nem található' });
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Tétel hozzáadása ──
-// POST /api/munkalap/:id/tetel
-router.post('/:id/tetel', authRequired, (req, res) => {
+// Tétel hozzáadása
+router.post('/:id/tetel', authRequired, async (req, res) => {
   const { megnevezes, tipus, mennyiseg, egyseg_ar } = req.body;
   if (!megnevezes) return res.status(400).json({ error: 'Megnevezés kötelező' });
-
-  const r = db.prepare(`
-    INSERT INTO munkalap_tetelek (munkalap_id, megnevezes, tipus, mennyiseg, egyseg_ar)
-    VALUES (?, ?, ?, ?, ?)
-  `).run(req.params.id, megnevezes, tipus || 'munka',
-         parseFloat(mennyiseg) || 1, parseFloat(egyseg_ar) || 0);
-
-  // Végső ár frissítése
-  const osszeg = db.prepare(
-    'SELECT SUM(mennyiseg * egyseg_ar) as total FROM munkalap_tetelek WHERE munkalap_id = ?'
-  ).get(req.params.id).total || 0;
-  db.prepare('UPDATE munkalapok SET vegso_ar = ?, frissitve = datetime(\'now\') WHERE id = ?')
-    .run(osszeg, req.params.id);
-
-  res.json({ ok: true, id: r.lastInsertRowid });
+  try {
+    const r = await db.run2(
+      'INSERT INTO munkalap_tetelek (munkalap_id,megnevezes,tipus,mennyiseg,egyseg_ar) VALUES (?,?,?,?,?)',
+      [req.params.id, megnevezes, tipus||'munka', parseFloat(mennyiseg)||1, parseFloat(egyseg_ar)||0]
+    );
+    const { total } = await db.get2('SELECT COALESCE(SUM(mennyiseg*egyseg_ar),0) as total FROM munkalap_tetelek WHERE munkalap_id=?', [req.params.id]);
+    await db.run2("UPDATE munkalapok SET vegso_ar=?, frissitve=datetime('now') WHERE id=?", [total, req.params.id]);
+    res.json({ ok: true, id: r.lastID });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Tétel törlése ──
-// DELETE /api/munkalap/tetel/:tid
-router.delete('/tetel/:tid', authRequired, (req, res) => {
-  const t = db.prepare('SELECT munkalap_id FROM munkalap_tetelek WHERE id = ?').get(req.params.tid);
-  if (!t) return res.status(404).json({ error: 'Nem található' });
-
-  db.prepare('DELETE FROM munkalap_tetelek WHERE id = ?').run(req.params.tid);
-
-  // Végső ár újraszámolása
-  const osszeg = db.prepare(
-    'SELECT COALESCE(SUM(mennyiseg * egyseg_ar), 0) as total FROM munkalap_tetelek WHERE munkalap_id = ?'
-  ).get(t.munkalap_id).total;
-  db.prepare('UPDATE munkalapok SET vegso_ar = ?, frissitve = datetime(\'now\') WHERE id = ?')
-    .run(osszeg, t.munkalap_id);
-
-  res.json({ ok: true });
+// Tétel törlése
+router.delete('/tetel/:tid', authRequired, async (req, res) => {
+  try {
+    const t = await db.get2('SELECT munkalap_id FROM munkalap_tetelek WHERE id=?', [req.params.tid]);
+    if (!t) return res.status(404).json({ error: 'Nem található' });
+    await db.run2('DELETE FROM munkalap_tetelek WHERE id=?', [req.params.tid]);
+    const { total } = await db.get2('SELECT COALESCE(SUM(mennyiseg*egyseg_ar),0) as total FROM munkalap_tetelek WHERE munkalap_id=?', [t.munkalap_id]);
+    await db.run2("UPDATE munkalapok SET vegso_ar=?, frissitve=datetime('now') WHERE id=?", [total, t.munkalap_id]);
+    res.json({ ok: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
-// ── Statisztika ──
-// GET /api/munkalap/stat/osszesito
-router.get('/stat/osszesito', authRequired, (req, res) => {
-  const stat = {
-    nyitott:      db.prepare("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='nyitott'").get().n,
-    folyamatban:  db.prepare("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='folyamatban'").get().n,
-    kesz:         db.prepare("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='kesz'").get().n,
-    archiv:       db.prepare("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='archiv'").get().n,
-    bevétel_ma:   db.prepare("SELECT COALESCE(SUM(vegso_ar),0) as n FROM munkalapok WHERE allapot='kesz' AND date(lezarva)=date('now')").get().n,
-    bevétel_honap:db.prepare("SELECT COALESCE(SUM(vegso_ar),0) as n FROM munkalapok WHERE allapot='kesz' AND strftime('%Y-%m',lezarva)=strftime('%Y-%m','now')").get().n,
-    fuggeben_foglalas: db.prepare("SELECT COUNT(*) as n FROM foglalasok WHERE allapot='fuggeben'").get().n,
-  };
-  res.json(stat);
+// Statisztika
+router.get('/stat/osszesito', authRequired, async (req, res) => {
+  try {
+    const [ny, fo, ke, ar, aH, aM, ff] = await Promise.all([
+      db.get2("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='nyitott'"),
+      db.get2("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='folyamatban'"),
+      db.get2("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='kesz'"),
+      db.get2("SELECT COUNT(*) as n FROM munkalapok WHERE allapot='archiv'"),
+      db.get2("SELECT COALESCE(SUM(vegso_ar),0) as n FROM munkalapok WHERE allapot='kesz' AND date(lezarva)=date('now')"),
+      db.get2("SELECT COALESCE(SUM(vegso_ar),0) as n FROM munkalapok WHERE allapot='kesz' AND strftime('%Y-%m',lezarva)=strftime('%Y-%m','now')"),
+      db.get2("SELECT COUNT(*) as n FROM foglalasok WHERE allapot='fuggeben'"),
+    ]);
+    res.json({ nyitott: ny.n, folyamatban: fo.n, kesz: ke.n, archiv: ar.n,
+      'bevétel_ma': aH.n, 'bevétel_honap': aM.n, fuggeben_foglalas: ff.n });
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 module.exports = router;
