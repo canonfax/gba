@@ -1,6 +1,5 @@
 // ═══════════════════════════════════════════
 //  db.js – SQLite adatbázis (sqlite3 csomag)
-//  Windows-on is működik fordítás nélkül
 // ═══════════════════════════════════════════
 
 const sqlite3 = require('sqlite3').verbose();
@@ -14,26 +13,27 @@ if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 const DB_PATH = path.join(DATA_DIR, 'gyulabringa.db');
 const db = new sqlite3.Database(DB_PATH);
 
-// Promise wrapperek – a sqlite3 csomag callback alapú,
-// ezeket a helpereket használjuk az async/await helyett
-db.run2  = (sql, params=[]) => new Promise((res, rej) => db.run(sql, params, function(e) { e ? rej(e) : res(this); }));
-db.get2  = (sql, params=[]) => new Promise((res, rej) => db.get(sql, params, (e, r) => e ? rej(e) : res(r)));
-db.all2  = (sql, params=[]) => new Promise((res, rej) => db.all(sql, params, (e, r) => e ? rej(e) : res(r)));
+// Promise wrapperek
+db.run2 = (sql, params=[]) => new Promise((res, rej) =>
+  db.run(sql, params, function(e) { e ? rej(e) : res(this); }));
+db.get2 = (sql, params=[]) => new Promise((res, rej) =>
+  db.get(sql, params, (e, r) => e ? rej(e) : res(r)));
+db.all2 = (sql, params=[]) => new Promise((res, rej) =>
+  db.all(sql, params, (e, r) => e ? rej(e) : res(r)));
 
-// WAL mód és foreign keys
-db.serialize(() => {
-  db.run('PRAGMA journal_mode = WAL');
-  db.run('PRAGMA foreign_keys = ON');
+// Adatbázis inicializálás – Promise-t ad vissza
+db.init = async function() {
+  await db.run2('PRAGMA journal_mode = WAL');
+  await db.run2('PRAGMA foreign_keys = ON');
 
-  // ── Táblák létrehozása ──
-  db.run(`CREATE TABLE IF NOT EXISTS admin (
+  await db.run2(`CREATE TABLE IF NOT EXISTS admin (
     id       INTEGER PRIMARY KEY,
     email    TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     nev      TEXT NOT NULL
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS foglalasok (
+  await db.run2(`CREATE TABLE IF NOT EXISTS foglalasok (
     id           TEXT PRIMARY KEY,
     nev          TEXT NOT NULL,
     telefon      TEXT NOT NULL,
@@ -48,9 +48,9 @@ db.serialize(() => {
     frissitve    TEXT NOT NULL DEFAULT (datetime('now'))
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS munkalapok (
+  await db.run2(`CREATE TABLE IF NOT EXISTS munkalapok (
     id           TEXT PRIMARY KEY,
-    foglalas_id  TEXT REFERENCES foglalasok(id),
+    foglalas_id  TEXT,
     ugyfel_nev   TEXT NOT NULL,
     ugyfel_tel   TEXT NOT NULL,
     ugyfel_email TEXT,
@@ -68,9 +68,9 @@ db.serialize(() => {
     lezarva      TEXT
   )`);
 
-  db.run(`CREATE TABLE IF NOT EXISTS munkalap_tetelek (
+  await db.run2(`CREATE TABLE IF NOT EXISTS munkalap_tetelek (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    munkalap_id TEXT NOT NULL REFERENCES munkalapok(id) ON DELETE CASCADE,
+    munkalap_id TEXT NOT NULL,
     megnevezes  TEXT NOT NULL,
     tipus       TEXT NOT NULL DEFAULT 'munka',
     mennyiseg   REAL NOT NULL DEFAULT 1,
@@ -78,18 +78,23 @@ db.serialize(() => {
     letrehozva  TEXT NOT NULL DEFAULT (datetime('now'))
   )`);
 
-  // ── Admin létrehozása ha még nincs ──
+  // Admin létrehozása ha nincs
   const adminEmail = process.env.ADMIN_EMAIL || 'gyulabringa@gmail.com';
   const adminPass  = process.env.ADMIN_PASS  || 'admin1234';
 
-  db.get('SELECT id FROM admin WHERE id = 1', [], async (err, row) => {
-    if (!row) {
-      const hash = await bcrypt.hash(adminPass, 10);
-      db.run('INSERT INTO admin (id, email, password, nev) VALUES (1, ?, ?, ?)',
-        [adminEmail, hash, 'Gergely Dániel']);
-      console.log(`✅ Admin létrehozva: ${adminEmail}`);
-    }
-  });
-});
+  const existing = await db.get2('SELECT id FROM admin WHERE id = 1');
+  if (!existing) {
+    const hash = await bcrypt.hash(adminPass, 10);
+    await db.run2(
+      'INSERT INTO admin (id, email, password, nev) VALUES (1, ?, ?, ?)',
+      [adminEmail, hash, 'Gergely Dániel']
+    );
+    console.log(`✅ Admin létrehozva: ${adminEmail}`);
+  } else {
+    console.log(`✅ Admin megtalálva: ${adminEmail}`);
+  }
+
+  console.log('✅ Adatbázis kész');
+};
 
 module.exports = db;
